@@ -1,16 +1,13 @@
 /**
  * Phone Flag Field for Elementor — Frontend JS
- * Fixed: dial code submission + flag display + absolute flag paths
+ * Fixed: dial code submission + flag display + search UI
  */
 ( function( $ ) {
     'use strict';
 
     var itiInstances = [];
 
-    // -------------------------------------------------------
-    // Set flag image paths dynamically using absolute URLs
-    // passed from PHP via wp_localize_script
-    // -------------------------------------------------------
+    // ── Set flag image paths via CSS variables ──────────────────────────
     if ( typeof epffSettings !== 'undefined' && epffSettings.flagsUrl ) {
         document.documentElement.style.setProperty(
             '--iti-path-flags-1x', 'url("' + epffSettings.flagsUrl + '")'
@@ -20,9 +17,65 @@
         );
     }
 
+    // ── Fix search field UI after dropdown opens ─────────────────────────
+    function fixSearchUI( dropdown ) {
+        if ( ! dropdown ) return;
+
+        // Find the search input
+        var searchInput = dropdown.querySelector( 'input[type="search"], .iti__search-input' );
+        if ( searchInput ) {
+            // Change type from "search" to "text" — this removes ALL browser search icons
+            searchInput.setAttribute( 'type', 'text' );
+            searchInput.style.cssText = [
+                'width: 100%',
+                'box-sizing: border-box',
+                'padding: 9px 40px 9px 10px',
+                'border: none',
+                'border-bottom: 1px solid #e5e5e5',
+                'outline: none',
+                'font-size: 13px',
+                'background: #ffffff',
+                'background-image: none',
+            ].join( ' !important;' ) + ' !important;';
+        }
+
+        // Find the clear/X button and style it
+        var clearBtn = dropdown.querySelector( '.iti__search-input-clear, button[class*="clear"], button[class*="close"]' );
+        if ( clearBtn ) {
+            clearBtn.style.cssText = [
+                'background: transparent',
+                'border: none',
+                'cursor: pointer',
+                'padding: 4px',
+                'display: flex',
+                'align-items: center',
+                'justify-content: center',
+                'color: #333333',
+                'position: absolute',
+                'right: 6px',
+                'top: 50%',
+                'transform: translateY(-50%)',
+            ].join( ' !important;' ) + ' !important;';
+
+            // Replace inner content with a clean black X
+            clearBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="1" y1="1" x2="13" y2="13" stroke="#333333" stroke-width="2" stroke-linecap="round"/><line x1="13" y1="1" x2="1" y2="13" stroke="#333333" stroke-width="2" stroke-linecap="round"/></svg>';
+        }
+
+        // Make the search wrapper use relative positioning for the absolute button
+        var searchWrapper = dropdown.querySelector( '.iti__search-input-container, .iti__country-search' );
+        if ( searchWrapper ) {
+            searchWrapper.style.cssText = [
+                'position: relative',
+                'display: flex',
+                'align-items: center',
+                'width: 100%',
+                'box-sizing: border-box',
+            ].join( ' !important;' ) + ' !important;';
+        }
+    }
+
     function initPhoneFlagFields() {
 
-        // Target all tel inputs inside Elementor forms
         var telFields = document.querySelectorAll(
             '.elementor-field-type-tel input[type="tel"], ' +
             '.elementor-field-group input[type="tel"]'
@@ -32,7 +85,6 @@
 
         telFields.forEach( function( input ) {
 
-            // Skip if already initialized
             if ( input.dataset.epffInit ) return;
             input.dataset.epffInit = 'true';
 
@@ -43,7 +95,6 @@
                 initialCountry:    epffSettings.autoDetect ? 'auto' : ( epffSettings.defaultCountry || 'us' ),
             };
 
-            // Auto-detect country via IP
             if ( epffSettings.autoDetect ) {
                 options.geoIpLookup = function( success ) {
                     fetch( 'https://ipapi.co/json/' )
@@ -60,7 +111,6 @@
                 };
             }
 
-            // Country restrictions
             if ( epffSettings.allowedCountries && epffSettings.allowedCountries.length ) {
                 options.onlyCountries = epffSettings.allowedCountries;
             }
@@ -68,35 +118,62 @@
                 options.excludeCountries = epffSettings.excludedCountries;
             }
 
-            // Initialize intl-tel-input
             var iti = window.intlTelInput( input, options );
             itiInstances.push( { input: input, iti: iti } );
 
-            // -------------------------------------------------------
-            // FIX: Before submit, prepend dial code directly to value
-            // This is the most reliable method for Elementor forms
-            // -------------------------------------------------------
+            // ── Fix search UI every time dropdown opens ──────────────────
+            var wrapper = input.closest( '.iti' );
+            if ( wrapper ) {
+                // Watch for dropdown to appear using MutationObserver
+                var observer = new MutationObserver( function( mutations ) {
+                    mutations.forEach( function( mutation ) {
+                        mutation.addedNodes.forEach( function( node ) {
+                            if ( node.nodeType === 1 ) {
+                                // Check if it's the dropdown or contains it
+                                var dropdown = node.classList && node.classList.contains( 'iti__dropdown-content' )
+                                    ? node
+                                    : node.querySelector( '.iti__dropdown-content' );
+                                if ( dropdown ) {
+                                    setTimeout( function() { fixSearchUI( dropdown ); }, 50 );
+                                }
+                                // Also check for country list directly
+                                if ( node.classList && node.classList.contains( 'iti__country-list' ) ) {
+                                    setTimeout( function() { fixSearchUI( node.parentElement ); }, 50 );
+                                }
+                            }
+                        } );
+                    } );
+                } );
+
+                observer.observe( document.body, { childList: true, subtree: true } );
+
+                // Also fix on flag click directly
+                var flagBtn = wrapper.querySelector( '.iti__selected-country' );
+                if ( flagBtn ) {
+                    flagBtn.addEventListener( 'click', function() {
+                        setTimeout( function() {
+                            var dropdown = document.querySelector( '.iti__dropdown-content' )
+                                || document.querySelector( '.iti.iti--container' );
+                            fixSearchUI( dropdown || wrapper );
+                        }, 100 );
+                    } );
+                }
+            }
+
+            // ── Inject dial code on submit ────────────────────────────────
             var form = input.closest( 'form' );
             if ( ! form ) return;
 
-            // Handle both standard and Elementor AJAX submit
-            // useCapture=true so it fires BEFORE Elementor reads the value
             form.addEventListener( 'submit', function() {
                 injectDialCode( input, iti );
             }, true );
 
-            // Also hook into Elementor's jQuery submit event
             $( form ).on( 'submit', function() {
                 injectDialCode( input, iti );
             } );
-
         } );
     }
 
-    /**
-     * Prepend the dial code to the input value before form submits.
-     * e.g. "1796281914" becomes "+8801796281914"
-     */
     function injectDialCode( input, iti ) {
         var countryData = iti.getSelectedCountryData();
         if ( ! countryData || ! countryData.dialCode ) return;
@@ -104,26 +181,19 @@
         var dialCode  = '+' + countryData.dialCode;
         var rawNumber = input.value.trim();
 
-        // Avoid double-prepending if already has a dial code
         if ( rawNumber.indexOf( '+' ) === 0 ) return;
 
-        // Set the value directly — Elementor reads this on submit
         input.value = dialCode + rawNumber;
     }
 
-    // -------------------------------------------------------
-    // Run on DOM ready
-    // -------------------------------------------------------
     $( document ).ready( function() {
         initPhoneFlagFields();
     } );
 
-    // Re-run when Elementor popups open
     $( document ).on( 'elementor/popup/show', function() {
         setTimeout( initPhoneFlagFields, 300 );
     } );
 
-    // Re-run when Elementor frontend re-renders
     $( window ).on( 'elementor/frontend/init', function() {
         initPhoneFlagFields();
     } );

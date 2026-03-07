@@ -1,0 +1,118 @@
+/* Admin Settings Page Styles */
+.epff-settings-wrap h1 {
+    margin-bottom: 24px;
+    font-size: 22px;
+}
+
+.epff-settings-layout {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.epff-settings-main {
+    flex: 1;
+    min-width: 0;
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.epff-settings-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+.epff-card {
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+}
+
+.epff-card h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.epff-card ol,
+.epff-card p {
+    margin: 0;
+    font-size: 13px;
+    color: #50575e;
+    line-height: 1.7;
+}
+
+.epff-card ol {
+    padding-left: 18px;
+}
+```
+
+---
+
+### File 11: `readme.txt` ← Critical for WordPress.org
+```
+=== Phone Flag Field for Elementor ===
+Contributors: yourwpusername
+Tags: elementor, phone, international, flag, country code
+Requires at least: 5.8
+Tested up to: 6.5
+Stable tag: 1.0.0
+Requires PHP: 7.4
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+Adds an international phone flag + country code selector to Elementor Pro Tel fields.
+
+== Description ==
+
+**Phone Flag Field for Elementor** automatically enhances any Tel field in Elementor Pro forms with:
+
+* 🌍 Country flag + dial code selector
+* 🔍 Searchable country dropdown (type US, PK, IN, or full country name)
+* 📍 Auto-detects visitor's country from IP
+* ✅ Full phone number (dial code + number) submitted together
+* ⚙️ Admin settings to set default country, allow/exclude countries
+
+= Requirements =
+* WordPress 5.8+
+* Elementor Pro (any version with Form widget)
+
+== Installation ==
+
+1. Upload the plugin files to `/wp-content/plugins/elementor-phone-flag-field/`.
+2. Activate the plugin via the **Plugins** menu in WordPress.
+3. Go to **Settings → Phone Flag Field** to configure.
+4. Add a Tel field to any Elementor Pro form — the flag picker appears automatically.
+
+== Frequently Asked Questions ==
+
+= Does this work without Elementor Pro? =
+No. The Form widget requires Elementor Pro.
+
+= How is the phone number submitted? =
+The dial code and phone number are merged into one value (e.g., +1 5551234567) before being stored and emailed.
+
+= Can I limit which countries appear? =
+Yes. In Settings → Phone Flag Field, enter comma-separated country codes in Allowed or Excluded Countries.
+
+== Screenshots ==
+
+1. Flag picker in an Elementor form
+2. Country search dropdown
+3. Admin settings page
+
+== Changelog ==
+
+= 1.0.0 =
+* Initial release
+
+== Upgrade Notice ==
+
+= 1.0.0 =
+Initial release.

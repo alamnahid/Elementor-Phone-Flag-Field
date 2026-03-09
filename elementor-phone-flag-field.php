@@ -10,7 +10,7 @@
  * Author URI:        https://nahidalam.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       elementor-phone-flag-field
+ * Text Domain:       phone-flag-field-for-elementor
  * Domain Path:       /languages
  */
 
@@ -121,15 +121,3 @@ function epff_deactivate() {
     // Settings are preserved in the database.
 }
 register_deactivation_hook( __FILE__, 'epff_deactivate' );
-
-/**
- * Load plugin textdomain for translations.
- */
-function epff_load_textdomain() {
-    load_plugin_textdomain(
-        'elementor-phone-flag-field',
-        false,
-        dirname( plugin_basename( __FILE__ ) ) . '/languages'
-    );
-}
-add_action( 'init', 'epff_load_textdomain' );

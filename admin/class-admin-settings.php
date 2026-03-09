@@ -106,54 +106,36 @@ class Admin_Settings {
         return array_values( $codes );
     }
 
-    public function render_default_country_field() {
-        $settings = get_option( $this->option_name, array() );
-        $value    = esc_attr( $settings['default_country'] ?? 'us' );
-        printf(
-            '<input type="text" name="%s[default_country]" value="%s" class="regular-text" placeholder="us" maxlength="2" />
-            <p class="description">%s</p>',
-            esc_attr( $this->option_name ),
-            $value,
-            esc_html__( 'Enter a 2-letter country code, e.g. us, pk, gb', 'elementor-phone-flag-field' )
-        );
-    }
+public function render_default_country_field() {
+    $settings = get_option( $this->option_name, array() );
+    $value    = esc_attr( $settings['default_country'] ?? 'us' );
+    echo '<input type="text" name="' . esc_attr( $this->option_name ) . '[default_country]" value="' . esc_attr( $value ) . '" class="regular-text" placeholder="us" maxlength="2" />';
+    echo '<p class="description">' . esc_html__( 'Enter a 2-letter country code, e.g. us, pk, gb', 'elementor-phone-flag-field' ) . '</p>';
+}
 
-    public function render_auto_detect_field() {
-        $settings = get_option( $this->option_name, array() );
-        $checked  = ! empty( $settings['auto_detect'] ) ? 'checked' : '';
-        printf(
-            '<label><input type="checkbox" name="%s[auto_detect]" value="1" %s /> %s</label>
-            <p class="description">%s</p>',
-            esc_attr( $this->option_name ),
-            $checked,
-            esc_html__( 'Enable', 'elementor-phone-flag-field' ),
-            esc_html__( 'Automatically detect the visitor\'s country using their IP address.', 'elementor-phone-flag-field' )
-        );
-    }
+public function render_auto_detect_field() {
+    $settings = get_option( $this->option_name, array() );
+    $checked  = ! empty( $settings['auto_detect'] ) ? 'checked="checked"' : '';
+    echo '<label>';
+    echo '<input type="checkbox" name="' . esc_attr( $this->option_name ) . '[auto_detect]" value="1" ' . esc_attr( $checked ) . ' />';
+    echo ' ' . esc_html__( 'Enable', 'elementor-phone-flag-field' );
+    echo '</label>';
+    echo '<p class="description">' . esc_html__( 'Automatically detect the visitor\'s country using their IP address.', 'elementor-phone-flag-field' ) . '</p>';
+}
 
-    public function render_allowed_countries_field() {
-        $settings = get_option( $this->option_name, array() );
-        $value    = esc_attr( implode( ', ', array_map( 'strtoupper', $settings['allowed_countries'] ?? array() ) ) );
-        printf(
-            '<input type="text" name="%s[allowed_countries]" value="%s" class="large-text" placeholder="US, PK, IN, GB" />
-            <p class="description">%s</p>',
-            esc_attr( $this->option_name ),
-            $value,
-            esc_html__( 'Comma-separated country codes. Leave blank to allow all countries.', 'elementor-phone-flag-field' )
-        );
-    }
+public function render_allowed_countries_field() {
+    $settings = get_option( $this->option_name, array() );
+    $value    = implode( ', ', array_map( 'strtoupper', $settings['allowed_countries'] ?? array() ) );
+    echo '<input type="text" name="' . esc_attr( $this->option_name ) . '[allowed_countries]" value="' . esc_attr( $value ) . '" class="large-text" placeholder="US, PK, IN, GB" />';
+    echo '<p class="description">' . esc_html__( 'Comma-separated country codes. Leave blank to allow all countries.', 'elementor-phone-flag-field' ) . '</p>';
+}
 
-    public function render_excluded_countries_field() {
-        $settings = get_option( $this->option_name, array() );
-        $value    = esc_attr( implode( ', ', array_map( 'strtoupper', $settings['excluded_countries'] ?? array() ) ) );
-        printf(
-            '<input type="text" name="%s[excluded_countries]" value="%s" class="large-text" placeholder="KP, IR" />
-            <p class="description">%s</p>',
-            esc_attr( $this->option_name ),
-            $value,
-            esc_html__( 'Comma-separated country codes to hide from the dropdown.', 'elementor-phone-flag-field' )
-        );
-    }
+public function render_excluded_countries_field() {
+    $settings = get_option( $this->option_name, array() );
+    $value    = implode( ', ', array_map( 'strtoupper', $settings['excluded_countries'] ?? array() ) );
+    echo '<input type="text" name="' . esc_attr( $this->option_name ) . '[excluded_countries]" value="' . esc_attr( $value ) . '" class="large-text" placeholder="KP, IR" />';
+    echo '<p class="description">' . esc_html__( 'Comma-separated country codes to hide from the dropdown.', 'elementor-phone-flag-field' ) . '</p>';
+}
 
     public function render_settings_page() {
         if ( ! current_user_can( 'manage_options' ) ) {

@@ -1,16 +1,17 @@
 <?php
 /**
- * Plugin Name:       Phone Flag Field for Elementor
+ * Plugin Name:       Nahid Phone Flag Field for Elementor
  * Plugin URI:        https://nahidalam.com/phone-flag-field
  * Description:       Adds international phone flag + country code selector to Elementor Pro Tel fields with auto-detection, search, and admin controls.
  * Version:           1.0.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
+ * Requires Plugins:  elementor
  * Author:            Nahid
  * Author URI:        https://nahidalam.com
- * License:           GPL v2 or later
+ * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       phone-flag-field-for-elementor
+ * Text Domain:       nahid-phone-flag-field
  * Domain Path:       /languages
  */
 
@@ -57,8 +58,8 @@ function epff_check_dependencies() {
 function epff_missing_elementor_notice() {
     $message = sprintf(
         /* translators: %s: Link to Elementor Pro */
-        esc_html__( 'Phone Flag Field for Elementor requires Elementor Pro to be installed and active. %s', 'elementor-phone-flag-field' ),
-        '<a href="https://elementor.com/pro/" target="_blank">' . esc_html__( 'Get Elementor Pro', 'elementor-phone-flag-field' ) . '</a>'
+        esc_html__( 'Phone Flag Field for Elementor requires Elementor Pro to be installed and active. %s', 'nahid-phone-flag-field' ),
+        '<a href="https://elementor.com/pro/" target="_blank">' . esc_html__( 'Get Elementor Pro', 'nahid-phone-flag-field' ) . '</a>'
     );
     echo '<div class="notice notice-error"><p>' . wp_kses_post( $message ) . '</p></div>';
 }

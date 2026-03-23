@@ -15,8 +15,8 @@ class Admin_Settings {
 
     public function add_settings_page() {
         add_options_page(
-            esc_html__( 'Phone Flag Field Settings', 'elementor-phone-flag-field' ),
-            esc_html__( 'Phone Flag Field', 'elementor-phone-flag-field' ),
+            esc_html__( 'Phone Flag Field Settings', 'nahid-phone-flag-field' ),
+            esc_html__( 'Phone Flag Field', 'nahid-phone-flag-field' ),
             'manage_options', // Only administrators.
             'epff-settings',
             array( $this, 'render_settings_page' )
@@ -32,14 +32,14 @@ class Admin_Settings {
 
         add_settings_section(
             'epff_general_section',
-            esc_html__( 'General Settings', 'elementor-phone-flag-field' ),
+            esc_html__( 'General Settings', 'nahid-phone-flag-field' ),
             '__return_false',
             'epff-settings'
         );
 
         add_settings_field(
             'default_country',
-            esc_html__( 'Default Country', 'elementor-phone-flag-field' ),
+            esc_html__( 'Default Country', 'nahid-phone-flag-field' ),
             array( $this, 'render_default_country_field' ),
             'epff-settings',
             'epff_general_section'
@@ -47,7 +47,7 @@ class Admin_Settings {
 
         add_settings_field(
             'auto_detect',
-            esc_html__( 'Auto-Detect Visitor Country', 'elementor-phone-flag-field' ),
+            esc_html__( 'Auto-Detect Visitor Country', 'nahid-phone-flag-field' ),
             array( $this, 'render_auto_detect_field' ),
             'epff-settings',
             'epff_general_section'
@@ -55,7 +55,7 @@ class Admin_Settings {
 
         add_settings_field(
             'allowed_countries',
-            esc_html__( 'Allowed Countries (leave empty for all)', 'elementor-phone-flag-field' ),
+            esc_html__( 'Allowed Countries (leave empty for all)', 'nahid-phone-flag-field' ),
             array( $this, 'render_allowed_countries_field' ),
             'epff-settings',
             'epff_general_section'
@@ -63,7 +63,7 @@ class Admin_Settings {
 
         add_settings_field(
             'excluded_countries',
-            esc_html__( 'Excluded Countries', 'elementor-phone-flag-field' ),
+            esc_html__( 'Excluded Countries', 'nahid-phone-flag-field' ),
             array( $this, 'render_excluded_countries_field' ),
             'epff-settings',
             'epff_general_section'
@@ -110,7 +110,7 @@ public function render_default_country_field() {
     $settings = get_option( $this->option_name, array() );
     $value    = esc_attr( $settings['default_country'] ?? 'us' );
     echo '<input type="text" name="' . esc_attr( $this->option_name ) . '[default_country]" value="' . esc_attr( $value ) . '" class="regular-text" placeholder="us" maxlength="2" />';
-    echo '<p class="description">' . esc_html__( 'Enter a 2-letter country code, e.g. us, pk, gb', 'elementor-phone-flag-field' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Enter a 2-letter country code, e.g. us, pk, gb', 'nahid-phone-flag-field' ) . '</p>';
 }
 
 public function render_auto_detect_field() {
@@ -118,23 +118,23 @@ public function render_auto_detect_field() {
     $checked  = ! empty( $settings['auto_detect'] ) ? 'checked="checked"' : '';
     echo '<label>';
     echo '<input type="checkbox" name="' . esc_attr( $this->option_name ) . '[auto_detect]" value="1" ' . esc_attr( $checked ) . ' />';
-    echo ' ' . esc_html__( 'Enable', 'elementor-phone-flag-field' );
+    echo ' ' . esc_html__( 'Enable', 'nahid-phone-flag-field' );
     echo '</label>';
-    echo '<p class="description">' . esc_html__( 'Automatically detect the visitor\'s country using their IP address.', 'elementor-phone-flag-field' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Automatically detect the visitor\'s country using their IP address.', 'nahid-phone-flag-field' ) . '</p>';
 }
 
 public function render_allowed_countries_field() {
     $settings = get_option( $this->option_name, array() );
     $value    = implode( ', ', array_map( 'strtoupper', $settings['allowed_countries'] ?? array() ) );
     echo '<input type="text" name="' . esc_attr( $this->option_name ) . '[allowed_countries]" value="' . esc_attr( $value ) . '" class="large-text" placeholder="US, PK, IN, GB" />';
-    echo '<p class="description">' . esc_html__( 'Comma-separated country codes. Leave blank to allow all countries.', 'elementor-phone-flag-field' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Comma-separated country codes. Leave blank to allow all countries.', 'nahid-phone-flag-field' ) . '</p>';
 }
 
 public function render_excluded_countries_field() {
     $settings = get_option( $this->option_name, array() );
     $value    = implode( ', ', array_map( 'strtoupper', $settings['excluded_countries'] ?? array() ) );
     echo '<input type="text" name="' . esc_attr( $this->option_name ) . '[excluded_countries]" value="' . esc_attr( $value ) . '" class="large-text" placeholder="KP, IR" />';
-    echo '<p class="description">' . esc_html__( 'Comma-separated country codes to hide from the dropdown.', 'elementor-phone-flag-field' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Comma-separated country codes to hide from the dropdown.', 'nahid-phone-flag-field' ) . '</p>';
 }
 
     public function render_settings_page() {
